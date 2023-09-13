@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/robert-gherlan/go-webapp/pkg/config"
 )
 
 var (
@@ -14,9 +16,22 @@ var (
 	pathToTemplates = "./templates"
 )
 
+var app *config.AppConfig
+
+// NewTemplates sets the config for the template package
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
+
 // RenderTemplate renders a template
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	tc, _ := CreateTemplateCache()
+	var tc map[string]*template.Template
+
+	if app.UseCache {
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
+	}
 
 	t, ok := tc[tmpl]
 	if !ok {
@@ -35,9 +50,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
 // CreateTemplateCache creates a template cache as a map
 func CreateTemplateCache() (map[string]*template.Template, error) {
-
 	myCache := map[string]*template.Template{}
-
 	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
 	if err != nil {
 		return myCache, err
