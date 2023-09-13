@@ -7,6 +7,13 @@
             <h1>This is about page</h1>
 
             <p>This came from template: {{index .StringMap "test"}}</p>
+
+            <p>
+                {{if ne (index .StringMap "remote_ip") ""}}
+                    Your remote IP is: {{index .StringMap "remote_ip"}}</p>
+                {{else}}
+                    I don't know your IP address yet.
+                {{end}}
         </div>
     </div>
 </div>

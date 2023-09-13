@@ -3,5 +3,5 @@
 ## Run the web app
 
 ```shell
-go run .
+go run /cmd/web/
 ```
